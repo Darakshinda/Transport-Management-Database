@@ -1,268 +1,575 @@
-DROP TABLE IF EXISTS `application`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `application` (
-  `app_no` varchar(50) NOT NULL,
-  `name` varchar(25) DEFAULT NULL,
-  `purpose` varchar(25) DEFAULT NULL,
-  `destination` varchar(30) DEFAULT NULL,
-  `passenger` int DEFAULT NULL,
-  `address` varchar(120) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `start_time` time DEFAULT NULL,
-  `remarks` varchar(200) DEFAULT NULL,
-  `alloted` int DEFAULT NULL,
-  `emp_code` varchar(25) DEFAULT NULL,
-  `approve` int DEFAULT NULL,
-  `cancel` int DEFAULT NULL,
-  `cancel_remark_user` varchar(200) DEFAULT NULL,
-  `cancel_remark_admin` varchar(200) DEFAULT NULL,
-  `outs` int DEFAULT '0',
-  `number` varchar(15) DEFAULT NULL,
-  PRIMARY KEY (`app_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE DATABASE BusTransportManagementSystem	;
 
---
--- Table structure for table `driver`
---
+-- Create Buses table
+CREATE TABLE Buses (
+    BusID INT PRIMARY KEY,
+    BusNumber VARCHAR(20),
+    Model VARCHAR(50),
+    Capacity INT,
+    YearManufactured INT,
+    Color VARCHAR(50)
+    -- Add other fields as needed
+);
 
-DROP TABLE IF EXISTS `driver`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `driver` (
-  `driver_code` varchar(25) NOT NULL,
-  `name` varchar(25) DEFAULT NULL,
-  `father_name` varchar(25) DEFAULT NULL,
-  `license_no` varchar(25) DEFAULT NULL,
-  `contact_no` varchar(25) DEFAULT NULL,
-  `dob` date DEFAULT NULL,
-  `doj` date DEFAULT NULL,
-  `live` int DEFAULT NULL,
-  `company_flag` varchar(25) DEFAULT NULL,
-  `license_valid` date DEFAULT NULL,
-  `address` varchar(120) DEFAULT NULL,
-  `available` int DEFAULT NULL,
-  PRIMARY KEY (`driver_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Create BusDrivers table
+CREATE TABLE BusDrivers (
+    DriverID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    LicenseNumber VARCHAR(20),
+    PhoneNumber VARCHAR(20),
+    Email VARCHAR(100),
+    BusID INT, -- Foreign key to link with Buses table
+    FOREIGN KEY (BusID) REFERENCES Buses(BusID)
+);
 
---
--- Table structure for table `employee`
---
+-- Create Routes table
+CREATE TABLE Routes (
+    RouteID INT PRIMARY KEY,
+    StartLocation VARCHAR(100),
+    EndLocation VARCHAR(100),
+    Distance INT,
+    EstimatedDuration INT,
+    EstimatedFuelConsumption DECIMAL(10, 2)
+    -- Add other fields as needed
+);
 
-DROP TABLE IF EXISTS `employee`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `employee` (
-  `emp_code` varchar(25) NOT NULL,
-  `name` varchar(25) DEFAULT NULL,
-  `email` varchar(25) DEFAULT NULL,
-  `password` varchar(25) DEFAULT NULL,
-  `emp_dept` varchar(25) DEFAULT NULL,
-  `reg_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `total_application` int DEFAULT '0',
-  `admin` int DEFAULT '0',
-  PRIMARY KEY (`emp_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Create BusSchedule table
+CREATE TABLE BusSchedule (
+    ScheduleID INT PRIMARY KEY,
+    BusID INT, -- Foreign key to link with Buses table
+    RouteID INT, -- Foreign key to link with Routes table
+    DepartureTime TIME,
+    ArrivalTime TIME,
+    -- Add other fields as needed
+    FOREIGN KEY (BusID) REFERENCES Buses(BusID),
+    FOREIGN KEY (RouteID) REFERENCES Routes(RouteID)
+);
 
---
--- Table structure for table `fuel_transaction`
---
+-- Create PassengerBookings table
+CREATE TABLE PassengerBookings (
+    BookingID INT PRIMARY KEY,
+    CustomerName VARCHAR(100),
+    BusID INT, -- Foreign key to link with Buses table
+    RouteID INT, -- Foreign key to link with Routes table
+    ShipmentDate DATE,
+    ArrivalDate DATE,
+    Status VARCHAR(20),
+    -- Add other fields as needed
+    FOREIGN KEY (BusID) REFERENCES Buses(BusID),
+    FOREIGN KEY (RouteID) REFERENCES Routes(RouteID)
+);
 
-DROP TABLE IF EXISTS `fuel_transaction`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `fuel_transaction` (
-  `bill_no` varchar(25) NOT NULL,
-  `registeration_no` varchar(25) DEFAULT NULL,
-  `filling_date` date DEFAULT NULL,
-  `name_of_party` varchar(30) DEFAULT NULL,
-  `present_km` double DEFAULT NULL,
-  `liter` double DEFAULT NULL,
-  `cost` double DEFAULT NULL,
-  `average` double DEFAULT NULL,
-  `cost_per_km` double DEFAULT NULL,
-  `remark` varchar(150) DEFAULT NULL,
-  PRIMARY KEY (`bill_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Create Stops table
+CREATE TABLE Stops (
+    StopID INT PRIMARY KEY,
+    LocationName VARCHAR(100),
+    Latitude DECIMAL(9, 6),  -- Adjust precision based on requirements
+    Longitude DECIMAL(9, 6)  -- Adjust precision based on requirements
+    -- Add other fields as needed
+);
 
---
--- Table structure for table `gate`
---
+-- Modify Routes table to include information about stops
+ALTER TABLE Routes
+ADD COLUMN Stop1ID INT, -- Foreign key to link with Stops table
+ADD COLUMN Stop2ID INT, -- Foreign key to link with Stops table
+ADD COLUMN Stop3ID INT; -- Foreign key to link with Stops table
 
-DROP TABLE IF EXISTS `gate`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `gate` (
-  `emp_code` varchar(25) NOT NULL,
-  `name` varchar(25) DEFAULT NULL,
-  `password` varchar(25) DEFAULT NULL,
-  PRIMARY KEY (`emp_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Add foreign key constraints
+ALTER TABLE Routes
+ADD CONSTRAINT FK_Stop1 FOREIGN KEY (Stop1ID) REFERENCES Stops(StopID),
+ADD CONSTRAINT FK_Stop2 FOREIGN KEY (Stop2ID) REFERENCES Stops(StopID),
+ADD CONSTRAINT FK_Stop3 FOREIGN KEY (Stop3ID) REFERENCES Stops(StopID);
 
---
--- Table structure for table `journey`
---
+-- Create BusScheduleStops table
+CREATE TABLE BusScheduleStops (
+    ScheduleStopID INT PRIMARY KEY,
+    ScheduleID INT, -- Foreign key to link with BusSchedule table
+    StopID INT, -- Foreign key to link with Stops table
+    ExpectedArrivalTime TIME,
+    ActualArrivalTime TIME,
+    Lateness INT, -- In minutes
+    -- Add other fields as needed
+    FOREIGN KEY (ScheduleID) REFERENCES BusSchedule(ScheduleID),
+    FOREIGN KEY (StopID) REFERENCES Stops(StopID)
+);
+-- Alter BusDrivers table to add a feedback column
+ALTER TABLE BusDrivers
+ADD COLUMN FeedbackRating DECIMAL(3, 2);  -- Assuming a rating out of 5, adjust precision as needed
+-- Create a stored procedure to calculate bonus based on average rating
+DELIMITER //
 
-DROP TABLE IF EXISTS `journey`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `journey` (
-  `app_no` int NOT NULL,
-  `emp_code` varchar(25) DEFAULT NULL,
-  `driver_code` varchar(25) DEFAULT NULL,
-  `registeration_no` varchar(25) DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `final_km` double DEFAULT NULL,
-  `completed` int DEFAULT '0',
-  `present_km` double DEFAULT NULL,
-  `rate` double DEFAULT NULL,
-  `payable` double DEFAULT NULL,
-  `start` int DEFAULT '0',
-  PRIMARY KEY (`app_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE PROCEDURE CalculateDriverBonus()
+BEGIN
+    UPDATE BusDrivers
+    SET Bonus = CASE
+        WHEN FeedbackRating >= 4.5 THEN 500  -- Bonus for excellent rating
+        WHEN FeedbackRating >= 4.0 THEN 300  -- Bonus for good rating
+        ELSE 0  -- No bonus for lower ratings
+    END;
+END //
 
---
--- Table structure for table `maintenance`
---
+DELIMITER ;
 
-DROP TABLE IF EXISTS `maintenance`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `maintenance` (
-  `registeration_no` varchar(25) NOT NULL,
-  `start` date NOT NULL,
-  `upto` date NOT NULL,
-  `cost` double DEFAULT NULL,
-  PRIMARY KEY (`registeration_no`,`start`,`upto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Table structure for table `p`
---
+-- Create Conductors table
+CREATE TABLE Conductors (
+    ConductorID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    PhoneNumber VARCHAR(20),
+    Email VARCHAR(100),
+    BusID INT, -- Foreign key to link with Buses table
+    FOREIGN KEY (BusID) REFERENCES Buses(BusID)
+);
 
-DROP TABLE IF EXISTS `p`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `p` (
-  `Personid` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) NOT NULL,
-  PRIMARY KEY (`Personid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Alter BusSchedule table to include ConductorID
+ALTER TABLE BusSchedule
+ADD COLUMN ConductorID INT, -- Foreign key to link with Conductors table
+ADD FOREIGN KEY (ConductorID) REFERENCES Conductors(ConductorID);
 
---
--- Table structure for table `private_expense`
---
+-- Alter PassengerBookings table to include ConductorID
+ALTER TABLE PassengerBookings
+ADD COLUMN ConductorID INT, -- Foreign key to link with Conductors table
+ADD FOREIGN KEY (ConductorID) REFERENCES Conductors(ConductorID);
 
-DROP TABLE IF EXISTS `private_expense`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `private_expense` (
-  `registeration_no` varchar(25) NOT NULL,
-  `start` date NOT NULL,
-  `upto` date NOT NULL,
-  `km_run` double DEFAULT NULL,
-  `liter` double DEFAULT NULL,
-  `average` double DEFAULT NULL,
-  `cost_per_km` double DEFAULT NULL,
-  `opening` double DEFAULT NULL,
-  `closing` double DEFAULT NULL,
-  `last_service_date` date DEFAULT NULL,
-  `service_km` double DEFAULT NULL,
-  PRIMARY KEY (`registeration_no`,`start`,`upto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- Modify Buses table to include seating information
+ALTER TABLE Buses
+ADD COLUMN SeatingCapacity INT,
+ADD COLUMN BookedSeats INT DEFAULT 0;  -- Default to 0, as initially, no seats are booked
 
---
--- Table structure for table `rate`
---
+-- Modify BusSchedule table to include seating information
+ALTER TABLE BusSchedule
+ADD COLUMN AvailableSeats INT;  -- Initially set to SeatingCapacity
 
-DROP TABLE IF EXISTS `rate`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `rate` (
-  `registeration_no` varchar(25) NOT NULL,
-  `valid_upto` date NOT NULL,
-  `rate` double DEFAULT NULL,
-  PRIMARY KEY (`registeration_no`,`valid_upto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+SET SQL_SAFE_UPDATES = 0;
+----------------------------TO BE UPDATED------------------------
+-- Update BusSchedule table to set AvailableSeats initially
+UPDATE BusSchedule
+SET AvailableSeats = (SELECT SeatingCapacity FROM Buses WHERE Buses.BusID = BusSchedule.BusID);
+--------------------------------------
+CREATE TABLE IF NOT EXISTS PassengerBookings (
+    BookingID INT PRIMARY KEY,
+    CustomerName VARCHAR(100),
+    BusID INT,
+    RouteID INT,
+    ScheduleID INT,
+    ConductorID INT,
+    ShipmentDate DATE,
+    ArrivalDate DATE,
+    Status VARCHAR(20),
+    SeatNumber INT,
+    -- Add other fields as needed
+    FOREIGN KEY (BusID) REFERENCES Buses(BusID),
+    FOREIGN KEY (RouteID) REFERENCES Routes(RouteID),
+    FOREIGN KEY (ScheduleID) REFERENCES BusSchedule(ScheduleID),
+    FOREIGN KEY (ConductorID) REFERENCES Conductors(ConductorID)
+);
 
---
--- Table structure for table `tests`
---
+-- Create a procedure to calculate fines for bus arrival times
+DELIMITER //
 
-DROP TABLE IF EXISTS `tests`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tests` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `start_at` time DEFAULT NULL,
-  `end_at` time DEFAULT NULL,
-  `st` date DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE PROCEDURE CalculateBusFines(IN schedule_id INT)
+BEGIN
+    DECLARE stop_id INT;
+    DECLARE done BOOLEAN DEFAULT FALSE;
+    DECLARE arrival_time TIME;
+    DECLARE expected_arrival_time TIME;
+    DECLARE fine_amount INT DEFAULT 0;
 
---
--- Table structure for table `vehicle`
---
+    -- Cursor to iterate through bus stops
+    DECLARE cursor_stops CURSOR FOR
+        SELECT StopID, ExpectedArrivalTime
+        FROM BusScheduleStops
+        WHERE ScheduleID = schedule_id;
 
-DROP TABLE IF EXISTS `vehicle`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `vehicle` (
-  `chassis_no` varchar(25) NOT NULL,
-  `registeration_no` varchar(25) NOT NULL,
-  `engine_no` varchar(25) DEFAULT NULL,
-  `manufacturing_date` date DEFAULT NULL,
-  `wheel_base` varchar(25) DEFAULT NULL,
-  `cubic_capacity` int DEFAULT NULL,
-  `engine_capacity` int DEFAULT NULL,
-  `sitting_capacity` int DEFAULT NULL,
-  `vehicle_class` varchar(25) DEFAULT NULL,
-  `model_name` varchar(25) DEFAULT NULL,
-  `vehicle_make` varchar(25) DEFAULT NULL,
-  `purchase_date` date DEFAULT NULL,
-  `registeration_date` date DEFAULT NULL,
-  `body_type` varchar(25) DEFAULT NULL,
-  `fuel_type` varchar(25) DEFAULT NULL,
-  `color` varchar(25) DEFAULT NULL,
-  `live` int DEFAULT NULL,
-  `available` int DEFAULT NULL,
-  `company_flag` varchar(25) DEFAULT NULL,
-  `cylinder` int DEFAULT NULL,
-  `registeration_validity` date DEFAULT NULL,
-  `remark` varchar(150) DEFAULT NULL,
-  `present_km` double DEFAULT NULL,
-  `user` varchar(25) DEFAULT NULL,
-  `usable` int DEFAULT NULL,
-  PRIMARY KEY (`registeration_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
---
--- Table structure for table `vehicle_transaction`
---
+    OPEN cursor_stops;
 
-DROP TABLE IF EXISTS `vehicle_transaction`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `vehicle_transaction` (
-  `registeration_no` varchar(25) NOT NULL,
-  `insurance_upto` date DEFAULT NULL,
-  `servicing_upto` date DEFAULT NULL,
-  `pollution_control_valid` date DEFAULT NULL,
-  `certificate_of_fitness` date DEFAULT NULL,
-  `servicing_date` date DEFAULT NULL,
-  `servicing_km` double DEFAULT NULL,
-  PRIMARY KEY (`registeration_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    read_loop: LOOP
+        FETCH cursor_stops INTO stop_id, expected_arrival_time;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- Get the actual arrival time for the stop
+        SELECT ActualArrivalTime INTO arrival_time
+        FROM BusScheduleStops
+        WHERE ScheduleID = schedule_id AND StopID = stop_id;
+
+        -- Calculate the difference in minutes
+        SET @time_difference = TIMESTAMPDIFF(MINUTE, expected_arrival_time, arrival_time);
+
+        -- Calculate fines based on time difference
+        IF @time_difference > 5 THEN
+            SET fine_amount = fine_amount + 50; -- Fine for being late by more than 5 minutes
+        END IF;
+    END LOOP;
+
+    -- Check final arrival time and apply additional fines
+    SELECT ActualArrivalTime INTO arrival_time
+    FROM BusScheduleStops
+    WHERE ScheduleID = schedule_id
+    ORDER BY StopID DESC
+    LIMIT 1;
+
+    -- Calculate the difference in minutes from the expected final arrival time
+    SET @time_difference = TIMESTAMPDIFF(MINUTE, expected_arrival_time, arrival_time);
+
+    -- Apply fines for exceeding the final arrival time
+    IF @time_difference > 10 THEN
+        SET fine_amount = fine_amount + 100 + ((@time_difference - 10) / 5) * 50;
+    END IF;
+
+    -- Insert the fine into a fines table or update the BusSchedule table with the fine amount
+    -- Example: INSERT INTO Fines (ScheduleID, FineAmount) VALUES (schedule_id, fine_amount);
+
+    CLOSE cursor_stops;
+END //
+
+DELIMITER ;
+
+
+CREATE PROCEDURE BookSeat(
+    IN p_CustomerName VARCHAR(100),
+    IN p_BusID INT,
+    IN p_RouteID INT,
+    IN p_ScheduleID INT,
+    OUT p_BookingID INT,
+    OUT p_Success INT
+)
+BEGIN
+    DECLARE v_AvailableSeats INT;
+
+    -- Check if seats are available
+    SELECT AvailableSeats INTO v_AvailableSeats
+    FROM BusSchedule
+    WHERE ScheduleID = p_ScheduleID;
+
+    IF v_AvailableSeats > 0 THEN
+        -- Decrement available seats
+        UPDATE BusSchedule
+        SET AvailableSeats = AvailableSeats - 1
+        WHERE ScheduleID = p_ScheduleID;
+
+        -- Book the seat
+        INSERT INTO PassengerBookings (CustomerName, BusID, RouteID, ScheduleID, ShipmentDate, Status)
+        VALUES (p_CustomerName, p_BusID, p_RouteID, p_ScheduleID, CURDATE(), 'Booked');
+
+        -- Get the booking ID
+        SET p_BookingID = LAST_INSERT_ID();
+        SET p_Success = 1;  -- Booking success
+    ELSE
+        SET p_BookingID = NULL;
+        SET p_Success = 0;  -- Booking failed, no available seats
+    END IF;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE CancelBooking(
+    IN p_BookingID INT,
+    OUT p_Success INT
+)
+BEGIN
+    DECLARE v_ScheduleID INT;
+
+    -- Get the ScheduleID associated with the booking
+    SELECT ScheduleID INTO v_ScheduleID
+    FROM PassengerBookings
+    WHERE BookingID = p_BookingID;
+
+    IF v_ScheduleID IS NOT NULL THEN
+        -- Increment available seats
+        UPDATE BusSchedule
+        SET AvailableSeats = AvailableSeats + 1
+        WHERE ScheduleID = v_ScheduleID;
+
+        -- Cancel the booking
+        UPDATE PassengerBookings
+        SET Status = 'Cancelled'
+        WHERE BookingID = p_BookingID;
+
+        SET p_Success = 1;  -- Cancellation success
+    ELSE
+        SET p_Success = 0;  -- Cancellation failed, invalid booking ID
+    END IF;
+END //
+
+DELIMITER ;
+DELIMITER //
+
+CREATE PROCEDURE GetBusSchedule(
+    IN p_BusID INT
+)
+BEGIN
+    SELECT
+        bs.ScheduleID,
+        r.StartLocation AS DepartureLocation,
+        r.EndLocation AS ArrivalLocation,
+        bs.DepartureTime,
+        bs.ArrivalTime,
+        s1.LocationName AS Stop1,
+        s2.LocationName AS Stop2,
+        s3.LocationName AS Stop3
+    FROM
+        BusSchedule bs
+    JOIN Routes r ON bs.RouteID = r.RouteID
+    LEFT JOIN Stops s1 ON r.Stop1ID = s1.StopID
+    LEFT JOIN Stops s2 ON r.Stop2ID = s2.StopID
+    LEFT JOIN Stops s3 ON r.Stop3ID = s3.StopID
+    WHERE
+        bs.BusID = p_BusID;
+END //
+
+DELIMITER ;
+DELIMITER //
+
+CREATE PROCEDURE GetPassengerList(
+    IN p_RouteID INT,
+    IN p_ScheduleID INT
+)
+BEGIN
+    SELECT
+        pb.BookingID,
+        pb.CustomerName,
+        pb.SeatNumber,
+        pb.Status
+    FROM
+        PassengerBookings pb
+    WHERE
+        pb.RouteID = p_RouteID
+        AND pb.ScheduleID = p_ScheduleID;
+END //
+
+DELIMITER ;
+DELIMITER //
+
+CREATE PROCEDURE GetDriverInformation(
+    IN p_BusID INT
+)
+BEGIN
+    SELECT
+        bd.DriverID,
+        bd.FirstName,
+        bd.LastName,
+        bd.LicenseNumber,
+        bd.PhoneNumber,
+        bd.Email
+    FROM
+        BusDrivers bd
+    WHERE
+        bd.BusID = p_BusID;
+END //
+
+DELIMITER ;
+DELIMITER //
+
+CREATE PROCEDURE GetConductorInformation(
+    IN p_BusID INT
+)
+BEGIN
+    SELECT
+        c.ConductorID,
+        c.FirstName,
+        c.LastName,
+        c.PhoneNumber,
+        c.Email
+    FROM
+        Conductors c
+    WHERE
+        c.BusID = p_BusID;
+END //
+
+DELIMITER ;
+
+
+
+CREATE VIEW DetailedBusScheduleView AS
+SELECT
+    bs.ScheduleID,
+    r.RouteID,
+    r.StartLocation AS DepartureLocation,
+    r.EndLocation AS ArrivalLocation,
+    bs.DepartureTime,
+    bs.ArrivalTime,
+    s.LocationName AS StopName,
+    bss.ExpectedArrivalTime,
+    bss.ActualArrivalTime,
+    bss.Lateness
+FROM
+    BusSchedule bs
+JOIN Routes r ON bs.RouteID = r.RouteID
+JOIN BusScheduleStops bss ON bs.ScheduleID = bss.ScheduleID
+JOIN Stops s ON bss.StopID = s.StopID;
+
+CREATE VIEW AvailableBusesView AS
+SELECT
+    bs.ScheduleID,
+    b.BusID,
+    b.BusNumber,
+    r.RouteID,
+    r.StartLocation AS DepartureLocation,
+    r.EndLocation AS ArrivalLocation,
+    bs.DepartureTime,
+    bs.ArrivalTime,
+    bs.AvailableSeats
+FROM
+    BusSchedule bs
+JOIN Buses b ON bs.BusID = b.BusID
+JOIN Routes r ON bs.RouteID = r.RouteID
+WHERE
+    bs.AvailableSeats > 0;
+
+CREATE VIEW BookingSummaryView AS
+SELECT
+    bs.ScheduleID,
+    b.BusID,
+    b.BusNumber,
+    r.RouteID,
+    r.StartLocation AS DepartureLocation,
+    r.EndLocation AS ArrivalLocation,
+    bs.DepartureTime,
+    bs.ArrivalTime,
+    COUNT(pb.BookingID) AS BookedSeats,
+    bs.AvailableSeats AS AvailableSeats,
+    b.Capacity AS TotalSeatingCapacity
+FROM
+    BusSchedule bs
+JOIN Buses b ON bs.BusID = b.BusID
+JOIN Routes r ON bs.RouteID = r.RouteID
+LEFT JOIN PassengerBookings pb ON bs.ScheduleID = pb.ScheduleID AND pb.Status = 'Booked'
+GROUP BY
+    bs.ScheduleID, b.BusID, b.BusNumber, r.RouteID, r.StartLocation, r.EndLocation, bs.DepartureTime, bs.ArrivalTime, bs.AvailableSeats, b.Capacity;
+CREATE VIEW FeedbackSummaryView AS
+SELECT
+    bd.DriverID,
+    bd.FirstName,
+    bd.LastName,
+    AVG(bd.FeedbackRating) AS AverageRating,
+    COUNT(bd.FeedbackRating) AS NumberOfFeedbacks
+FROM
+    BusDrivers bd
+GROUP BY
+    bd.DriverID, bd.FirstName, bd.LastName;
+
+CREATE VIEW LateBusSummaryView AS
+SELECT
+    bs.ScheduleID,
+    bss.StopID,
+    bss.Lateness
+FROM
+    BusSchedule bs
+JOIN BusScheduleStops bss ON bs.ScheduleID = bss.ScheduleID
+WHERE
+    bss.Lateness > 0;
+
+CREATE VIEW ConductorScheduleView AS
+SELECT
+    c.ConductorID,
+    c.FirstName,
+    c.LastName,
+    b.BusID,
+    r.RouteID,
+    r.StartLocation AS DepartureLocation,
+    r.EndLocation AS ArrivalLocation,
+    bs.DepartureTime,
+    bs.ArrivalTime
+FROM
+    Conductors c
+JOIN BusSchedule bs ON c.ConductorID = bs.ConductorID
+JOIN Buses b ON bs.BusID = b.BusID
+JOIN Routes r ON bs.RouteID = r.RouteID;
+
+
+
+DELIMITER //
+
+CREATE TRIGGER AfterBookingTrigger
+AFTER INSERT ON PassengerBookings
+FOR EACH ROW
+BEGIN
+    -- Update available seats after a booking
+    UPDATE BusSchedule
+    SET AvailableSeats = AvailableSeats - 1
+    WHERE ScheduleID = NEW.ScheduleID;
+END //
+
+DELIMITER ;
+DELIMITER //
+
+CREATE TRIGGER AfterCancellationTrigger
+AFTER UPDATE ON PassengerBookings
+FOR EACH ROW
+BEGIN
+    -- Update available seats after a cancellation
+    IF NEW.Status = 'Cancelled' AND OLD.Status = 'Booked' THEN
+        UPDATE BusSchedule
+        SET AvailableSeats = AvailableSeats + 1
+        WHERE ScheduleID = NEW.ScheduleID;
+    END IF;
+END //
+
+DELIMITER ;
+DELIMITER //
+
+CREATE TRIGGER AfterLateArrivalTrigger
+AFTER UPDATE ON BusScheduleStops
+FOR EACH ROW
+BEGIN
+    -- Your logic for handling late arrivals, e.g., update fines table
+    -- For simplicity, let's assume you have a Fines table
+    IF NEW.Lateness > 5 THEN
+        INSERT INTO Fines (ScheduleID, StopID, FineAmount)
+        VALUES (NEW.ScheduleID, NEW.StopID, 50);
+    END IF;
+END //
+
+DELIMITER ;
+-- Example: Index on ScheduleID column in BusSchedule table
+CREATE INDEX idx_ScheduleID ON BusSchedule(ScheduleID);
+-- Add similar indexes on other frequently used columns
+DELIMITER //
+
+CREATE PROCEDURE BookSeat(
+    IN p_CustomerName VARCHAR(100),
+    IN p_BusID INT,
+    IN p_RouteID INT,
+    IN p_ScheduleID INT,
+    OUT p_BookingID INT,
+    OUT p_Success INT
+)
+BEGIN
+    DECLARE v_AvailableSeats INT;
+
+    -- Check if seats are available
+    SELECT AvailableSeats INTO v_AvailableSeats
+    FROM BusSchedule
+    WHERE ScheduleID = p_ScheduleID;
+
+    IF v_AvailableSeats > 0 THEN
+        -- Decrement available seats
+        UPDATE BusSchedule
+        SET AvailableSeats = AvailableSeats - 1
+        WHERE ScheduleID = p_ScheduleID;
+
+        -- Book the seat
+        INSERT INTO PassengerBookings (CustomerName, BusID, RouteID, ScheduleID, ShipmentDate, Status)
+        VALUES (p_CustomerName, p_BusID, p_RouteID, p_ScheduleID, CURDATE(), 'Booked');
+
+        -- Get the booking ID
+        SET p_BookingID = LAST_INSERT_ID();
+        SET p_Success = 1;  -- Booking success
+    ELSE
+        -- Handle error when no available seats
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'No available seats for booking';
+    END IF;
+END //
+
+DELIMITER ;
+
+
