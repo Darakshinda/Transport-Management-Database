@@ -1,3 +1,4 @@
+CREATE DATABASE BusTransportManagementSystem; 
 Use  BusTransportManagementSystem;
 -- Create Buses table
 CREATE TABLE Buses (
