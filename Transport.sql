@@ -1,5 +1,4 @@
-CREATE DATABASE BusTransportManagementSystem	;
-
+Use  BusTransportManagementSystem;
 -- Create Buses table
 CREATE TABLE Buses (
     BusID INT PRIMARY KEY,
@@ -143,11 +142,7 @@ ALTER TABLE BusSchedule
 ADD COLUMN AvailableSeats INT;  -- Initially set to SeatingCapacity
 
 SET SQL_SAFE_UPDATES = 0;
-----------------------------TO BE UPDATED------------------------
--- Update BusSchedule table to set AvailableSeats initially
-UPDATE BusSchedule
-SET AvailableSeats = (SELECT SeatingCapacity FROM Buses WHERE Buses.BusID = BusSchedule.BusID);
---------------------------------------
+
 CREATE TABLE IF NOT EXISTS PassengerBookings (
     BookingID INT PRIMARY KEY,
     CustomerName VARCHAR(100),
@@ -230,6 +225,46 @@ END //
 
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE BookSeat(
+    IN p_CustomerName VARCHAR(100),
+    IN p_BusID INT,
+    IN p_RouteID INT,
+    IN p_ScheduleID INT,
+    OUT p_BookingID INT,
+    OUT p_Success INT
+)
+BEGIN
+    DECLARE v_AvailableSeats INT;
+
+    -- Check if seats are available
+    SELECT AvailableSeats INTO v_AvailableSeats
+    FROM BusSchedule
+    WHERE ScheduleID = p_ScheduleID;
+
+    IF v_AvailableSeats > 0 THEN
+        -- Decrement available seats
+        UPDATE BusSchedule
+        SET AvailableSeats = AvailableSeats - 1
+        WHERE ScheduleID = p_ScheduleID;
+
+        -- Book the seat
+        INSERT INTO PassengerBookings (CustomerName, BusID, RouteID, ScheduleID, ShipmentDate, Status)
+        VALUES (p_CustomerName, p_BusID, p_RouteID, p_ScheduleID, CURDATE(), 'Booked');
+
+        -- Get the booking ID
+        SET p_BookingID = LAST_INSERT_ID();
+        SET p_Success = 1;  -- Booking success
+    ELSE
+        SET p_BookingID = NULL;
+        SET p_Success = 0;  -- Booking failed, no available seats
+    END IF;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
 
 CREATE PROCEDURE BookSeat(
     IN p_CustomerName VARCHAR(100),
@@ -267,6 +302,7 @@ BEGIN
 END //
 
 DELIMITER ;
+
 
 DELIMITER //
 
@@ -443,7 +479,7 @@ JOIN Buses b ON bs.BusID = b.BusID
 JOIN Routes r ON bs.RouteID = r.RouteID
 LEFT JOIN PassengerBookings pb ON bs.ScheduleID = pb.ScheduleID AND pb.Status = 'Booked'
 GROUP BY
-    bs.ScheduleID, b.BusID, b.BusNumber, r.RouteID, r.StartLocation, r.EndLocation, bs.DepartureTime, bs.ArrivalTime, bs.AvailableSeats, b.Capacity;
+bs.ScheduleID, b.BusID, b.BusNumber, r.RouteID, r.StartLocation, r.EndLocation, bs.DepartureTime, bs.ArrivalTime, bs.AvailableSeats, b.Capacity;
 CREATE VIEW FeedbackSummaryView AS
 SELECT
     bd.DriverID,
