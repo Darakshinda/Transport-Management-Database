@@ -1,15 +1,15 @@
-CREATE TABLE Customer(
-    cust_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    cust_fname VARCHAR(255),
-    cust_lname VARCHAR(255),
-    cust_address VARCHAR(255),
-    cust_ph_no CHAR(10),
+CREATE TABLE Passenger(
+    passen_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    passen_fname VARCHAR(255),
+    passen_lname VARCHAR(255),
+    passen_address VARCHAR(255),
+    passen_ph_no CHAR(10),
     status BOOLEAN);
 
 CREATE TABLE Reservation (
     res_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    cust_id INT,
-    room_id INT,
+    passen_id INT,
+    bus_id INT,
     transaction_id VARCHAR(12),
     stop1_expected DATETIME,
     stop1_real DATETIME,
@@ -21,14 +21,14 @@ CREATE TABLE Reservation (
 
 );
 
-CREATE TABLE Room(
-    room_id INT PRIMARY KEY NOT NULL,
+CREATE TABLE Bus(
+    bus_id INT PRIMARY KEY NOT NULL,
     type_id CHAR(3),
     description TEXT,
     price INT,
     occupancy_status BOOLEAN);
 
-CREATE TABLE Room_Type(
+CREATE TABLE Bus_Type(
     type_id CHAR(3) PRIMARY KEY NOT NULL,
     name VARCHAR(255),
     capacity INT);

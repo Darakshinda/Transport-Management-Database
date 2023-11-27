@@ -1,1 +1,1 @@
-SELECT * FROM Customer;
+SELECT * FROM Passenger;

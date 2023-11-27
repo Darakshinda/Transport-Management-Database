@@ -1,1 +1,1 @@
-DELETE FROM Customer WHERE cust_id = %s;
+DELETE FROM Passenger WHERE passen_id = %s;

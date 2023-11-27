@@ -1,1 +1,1 @@
-SELECT cust_id FROM Customer WHERE cust_ph_no = %s;
+SELECT passen_id FROM Passenger WHERE passen_ph_no = %s;

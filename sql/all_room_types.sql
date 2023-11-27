@@ -1,1 +1,1 @@
-SELECT * FROM Room_Type;
+SELECT * FROM Bus_Type;

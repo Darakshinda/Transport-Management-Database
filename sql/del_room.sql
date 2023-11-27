@@ -1,1 +1,1 @@
-DELETE FROM Room WHERE room_id = %s;
+DELETE FROM Bus WHERE bus_id = %s;
