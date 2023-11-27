@@ -13,7 +13,7 @@ The Transport Management System project simplifies and streamlines bus and taxi 
 -  [Goals](#goals)
 - [Project Structure](#project-structure)
 - [Usage](#usage)
-- [Contributing](#contributing)
+- [Contributions](#contributions)
 
 
 ## Features
@@ -40,6 +40,13 @@ Make sure you have the following installed before running the application:
 
    ```bash
    git clone https://github.com/your-username/mysql-flask-project.git](https://github.com/anshikabhatia13/Transport-Management-Database
+    ```
+   ```bash
+   run app.y
+   ```
+   ```bash
+   run sql queries to insert data in mysql
+   ```
 
 ## Goals
 
