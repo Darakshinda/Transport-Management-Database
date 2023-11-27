@@ -2,17 +2,44 @@
 
 ## Project Overview
 
-The Transport Management System project simplifies and streamlines bus and taxi transportation services through the integration of a robust Database Management System (DBMS). The project leverages SQL for database management, XAMPP as the web server solution, and Python for scripting and backend logic. The system focuses on enhancing efficiency, transparency, and user experience in managing transportation services.
+The Transport Management System project simplifies and streamlines bus and taxi transportation services through the integration of a robust Database Management System (DBMS). The project leverages SQL for database management and Flask and Python for scripting and backend logic. The system focuses on enhancing efficiency, transparency, and user experience in managing transportation services.
 
+=
 ## Table of Contents
 
-- [Goals](#goals)
-- [Specifications](#specifications)
-- [Technologies Used](#technologies-used)
-- [GitHub Repository](#github-repository)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
-- [Contributors](#contributors)
-- [Acknowledgments](#acknowledgments)
+-  [Goals](#goals)
+- [Project Structure](#project-structure)
+- [Usage](#usage)
+- [Contributing](#contributing)
+
+
+## Features
+
+- Add and manage passenger details.
+- Add and manage employee details.
+- Make bus reservations and track transactions.
+- Import and export data to/from CSV files.
+- Clear all data in the database.
+
+## Prerequisites
+
+Make sure you have the following installed before running the application:
+
+- Python (3.x recommended)
+- Flask
+- MySQL server
+  
+
+
+## Getting Started
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-username/mysql-flask-project.git](https://github.com/anshikabhatia13/Transport-Management-Database
 
 ## Goals
 
@@ -22,7 +49,7 @@ The Transport Management System project simplifies and streamlines bus and taxi 
 
 3. **User-Friendly Interface:** Create an intuitive and user-friendly interface for both administrators and end-users to facilitate easy interaction with the system.
 
-## Specifications
+## Project Structure
 
 The proposed system utilizes a three-tier architecture:
 
@@ -30,26 +57,14 @@ The proposed system utilizes a three-tier architecture:
 
 2. **Application Layer:** Python scripts for backend logic, business rules, and seamless integration with the database.
 
-3. **Data Layer:** A MySQL database managed using SQL to store and retrieve information related to routes, schedules, vehicles, passengers, and transactions.
+3. **Data Layer:** A MySQL database managed using SQL to store and retrieve information related to  buses, passengers, bus stops and transactions.
 
-## Technologies Used
 
-I. **Database Management System:**
-   - MySQL for robust and efficient data management.
+## Contributions
 
-II. **Server:**
-    - XAMPP for a cross-platform web server solution, ensuring compatibility and ease of deployment.
 
-III. **High-Level Language:**
-    - Python for scripting, logic implementation, and seamless integration with the database.
+1. **Anshika** 2021CSB1069
 
-## GitHub Repository
+2. **Darakshinda** 2021CSB1130
 
-[Transport Management System GitHub Repository](#insert-github-link-here)
-
-## Getting Started
-
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/username/transport-management-system.git
-   cd transport-management-system
+3. **Chaitanya** 2021CSB1121
