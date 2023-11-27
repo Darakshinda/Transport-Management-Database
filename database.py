@@ -1,9 +1,6 @@
 import mysql.connector as mysql
-
 from config import *
 import csv
-
-# Function to connect to MySQL server and optionally, database
 def connection(database=None):
     args = {
         'host': HOST,
@@ -16,8 +13,6 @@ def connection(database=None):
         args['database'] = database
     return mysql.connect(**args)
 
-# Trying Connecting to MySQL server with credentials in config file
-# Connection to start as soon as this script is imported
 try:
     print(f"Connecting to MySQL server on {HOST}:{PORT}...")
     conn = connection()
@@ -29,13 +24,11 @@ except mysql.errors.InterfaceError:
     print("Make sure that the server is running")
     exit()
 
-# Function to create new Database
 def createDB():
     cursor = conn.cursor()
     cursor.execute(f"CREATE DATABASE {DATABASE}")
     cursor.close()
 
-# Function to run a sql script
 def source(filename, *args, output=True, lastRowId=False):
     cursor = conn.cursor(buffered=output)
     with open('sql/' + filename) as f:
@@ -57,7 +50,6 @@ def source(filename, *args, output=True, lastRowId=False):
     if output or lastRowId:
         return result
 
-
 def import_from_csv(name, filename):
     with open(filename, 'r') as csvfile:
         reader = csv.reader(csvfile)
@@ -65,7 +57,7 @@ def import_from_csv(name, filename):
         if name == 'cust':
             for row in reader:
                 row[4] = int(row[4])
-                source("new_customer.sql", *row, output=False)
+                source("newpassenger.sql", *row, output=False)
         elif name == 'res':
             for row in reader:
                 row[0], row[1], row[5] = map(int, (row[0], row[1], row[5]))
@@ -73,11 +65,11 @@ def import_from_csv(name, filename):
         elif name == 'room':
             for row in reader:
                 row[0], row[3], row[4] = map(int, (row[0], row[3], row[4]))
-                source("new_room.sql", *row, output=False)
+                source("newbus.sql", *row, output=False)
         elif name == 'room_type':
             for row in reader:
                 row[2] = int(row[2])
-                source("new_room_type.sql", *row, output=False)
+                source("newbustype.sql", *row, output=False)
         elif name == 'tnx':
             for row in reader:
                 row[4], row[6], row[7] = map(int, (row[4], row[6], row[7]))
@@ -96,11 +88,20 @@ def import_from_csv(name, filename):
                 row[1] = int(row[1])
                 source("new_job.sql", *row, output=False)
 
+def new(newname, newfile):
+    with open(newfile, 'w') as file:
+        file.write(f'"""\n')
+        file.write(f'{newname}\n')
+        file.write(f'Write your code here\n')
+        file.write(f'"""\n\n')
+
+        for line_number in range(1, 31):
+            file.write(f'# Line {line_number}\n')
 
 def export_to_csv(name, filename):
     if name == 'Customer':
         fields = ['cust_id', 'cust_fname', 'cust_lname', 'cust_address', 'cust_ph_no', 'status']
-        rows = source("all_customers.sql")
+        rows = source("allpassengers.sql")
     elif name == 'Employee':
         fields = ['emp_id', 'job_id', 'emp_fname', 'emp_lname', 'emp_address', 'emp_ph_no']
         rows = source("all_employees.sql")
@@ -112,10 +113,10 @@ def export_to_csv(name, filename):
         rows = source("all_reservations.sql")
     elif name == 'Room_Type':
         fields = ['type_id', 'name', 'capacity']
-        rows = source("all_room_types.sql")
+        rows = source("allbustypes.sql")
     elif name == 'Room':
         fields = ['room_id', 'type_id', 'description', 'price', 'occupancy_status']
-        rows = source("all_rooms.sql")
+        rows = source("allbuses.sql")
     elif name == 'Transaction':
         fields = ['transaction_id', 'emp_id', 'res_id', 'dated', 'amount', 'payment_mode', 'type', 'status']
         rows = source("all_transactions.sql")
@@ -135,12 +136,6 @@ def clear():
     source('tables_schema.sql', output=False)
 
 
-# This section will run as soon as this script is imported
-# To check if the database for this app exists or not
-# The name of database is taken from the config file
-# If not existing already (e.g. running this app for the first time),
-# automatically creates the database and tables
-# Also connects to the database of MySQL server
 print(f"Connecting to {DATABASE} database...")
 cur = conn.cursor(buffered=True)
 newDB = False
@@ -155,17 +150,11 @@ conn = connection(DATABASE)
 if newDB:
     print("Creating required tables in the database...")
     source('tables_schema.sql', output=False)
-
-
-# Running this script explicitly to delete the database
-# Implemented for developement purposes only
-# No need to run this script explicitly in production
+    
 if __name__ == '__main__':
-    # Getting confirmation from the user
     print("Running this script explicitly will delete the database with name as in config.ini")
     x = input("Do you want to delete the database? [Y/n] ").upper()
     if x == 'Y' or x == 'YES':
-        # Deleting the database with name as in config file
         cur = conn.cursor()
         cur.execute(f"DROP DATABASE IF EXISTS {DATABASE}")
         cur.close()

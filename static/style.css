@@ -349,14 +349,14 @@ textarea {
 input::-moz-placeholder, textarea::-moz-placeholder {
   opacity: 1;
   /* 1 */
-  color: #9ca3af;
+  color:rgb(157, 224, 243);
   /* 2 */
 }
 
 input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   opacity: 1;
   /* 1 */
-  color: #9ca3af;
+  color:rgb(157, 224, 243);
   /* 2 */
 }
 
@@ -364,7 +364,7 @@ input::placeholder,
 textarea::placeholder {
   opacity: 1;
   /* 1 */
-  color: #9ca3af;
+  color: rgb(157, 224, 243);
   /* 2 */
 }
 
@@ -791,6 +791,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(22 163 74 / var(--tw-text-opacity));
 }
 
+.navy-blue-text {
+  color: rgb(24, 24, 125);
+}
+
 .text-red-600 {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity));
@@ -843,7 +847,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .outline-red-500 {
-  outline-color: #ef4444;
+  outline-color: #55f74c;
 }
 
 .drop-shadow-md {
