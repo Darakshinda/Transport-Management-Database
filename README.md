@@ -4,7 +4,7 @@
 
 The Transport Management System project simplifies and streamlines bus and taxi transportation services through the integration of a robust Database Management System (DBMS). The project leverages SQL for database management and Flask and Python for scripting and backend logic. The system focuses on enhancing efficiency, transparency, and user experience in managing transportation services.
 
-=
+
 ## Table of Contents
 
 - [Features](#features)
