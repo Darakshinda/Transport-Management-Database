@@ -1,0 +1,6 @@
+type_id,name,capacity
+SDX,Super Delux,55
+DXL,Delux,60
+NAC,Normal AC,50
+NOL,Normal NON-AC,55
+PRM,Primary,60

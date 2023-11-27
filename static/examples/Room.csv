@@ -1,0 +1,11 @@
+Bus_id,type_id,description,price,occupancy_status
+101,DXL,Delux Bus with maximum capacity of 60 people,2000,1
+102,SDX,Super Delux Bus with amazing window view and capacity of 55 people,3000,0
+103,SDX,Super Delux Bus with amazing window view and capacity of 55 people,3000,1
+104,DXL,Delux Bus with maximum capacity of 60 people,2000,0
+105,NAC,Normal Bus with basic features like TV and AC,1500,1
+201,NAC,Normal Bus with basic features like TV and AC,1500,0
+202,NAC,Normal Bus with basic features like TV and AC,1500,0
+203,NOL,Normal Bus with no AC,1250,1
+204,NOL,Normal Bus with no AC,1250,0
+205,PRM,Primary Budget Buss for 60 people,1000,1
