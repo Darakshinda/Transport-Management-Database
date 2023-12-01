@@ -1,4 +1,4 @@
-passen_id,bus_id,transaction_id,stop1_expected,stop1_real,stop2_expected,stop2_real
+passen_id,bus_id,transaction_id,stop1_expected,stop1_real,stop2_expected,stop2_real,stop3expected, stop3_real
 1,102,PYTM1234,2022-02-16 08:00:00,2022-02-16 09:30:00,2022-02-18 12:00:00,2022-02-18 12:30:00
 7,201,PYTM7927,2022-02-20 08:00:00,2022-02-20 10:30:00,2022-02-22 12:00:00,2022-02-22 12:30:00
 1,204,PYTM5721,2022-03-02 08:00:00,2022-03-02 08:30:00,2022-03-07 12:00:00,2022-03-07 12:30:00

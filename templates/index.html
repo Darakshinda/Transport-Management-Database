@@ -79,13 +79,16 @@
         <table id="reservations" class="hidden w-full">
             <tr class="border-b-2 border-gray-400/70">
                 <th class="px-2 py-1 text-left font-medium"> Booking ID </th>
-                <th class="px-2 py-1 text-left font-medium"> Booking By </th>
+                
                 <th class="px-2 py-1 text-left font-medium"> Bus No. </th>
                 <th class="px-2 py-1 text-left font-medium"> Expected Stop1 Time </th>
                 <th class="px-2 py-1 text-left font-medium"> Real Stop1 Time  </th>
                 <th class="px-2 py-1 text-left font-medium"> Expected Stop2 Time </th>
                 <th class="px-2 py-1 text-left font-medium"> Real Stop2 Time  </th>
-                <th class="px-2 py-1 text-left font-medium"> Fine </th>
+                <th class="px-2 py-1 text-left font-medium"> Expected Stop3 Time </th>
+                <th class="px-2 py-1 text-left font-medium"> Real Stop3 Time  </th>
+                <th class="px-2 py-1 text-left font-medium"> Lateness Fine </th>
+                <th class="px-2 py-1 text-left font-medium"> Status </th>
                 <th class="px-2 py-1 text-left font-medium"> Payment </th>
                 <th class="px-2 py-1"> &nbsp; </th>
                 <th class="px-2 py-1"> &nbsp; </th>
@@ -93,13 +96,16 @@
             {% for i in range(len_res) %}
                 <tr class="border-b-2 text-base border-dashed border-gray-400/40">
                     <td class="px-3"> {{ res[i][0] }} </td>
-                    <td class="px-1"> {{ cust_dict[res[i][1]] }} </td>
+                   
                     <td class="px-1"> {{ res[i][2] }} </td>
                     <td class="px-1"> {{ res[i][4] }}
                     <td class="px-1"> {{ res[i][5] }}
                     <td class="px-1"> {{ res[i][6] }}
                     <td class="px-1"> {{ res[i][7] }}
                     <td class="px-1"> {{ res[i][8] }}
+                    <td class="px-1"> {{ res[i][9] }}
+                    <td class="px-1"> {{ res[i][10] }}
+                    <td class="px-1"> {{ res[i][11] }}
                     <td class="px-1"> <button onclick="tranDetails('{{ res[i][3] }}')" class="text-blue-500 underline underline-offset-2"> {{ res[i][3] }} </button>
                     <td class="px-1"> <button data-type="edit" data-id="{{ res[i][0] }}">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 opacity-60 hover:opacity-100" viewBox="0 0 20 20" fill="currentColor">

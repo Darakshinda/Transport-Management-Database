@@ -15,11 +15,19 @@ CREATE TABLE Reservation (
     stop1_real DATETIME,
     stop2_expected DATETIME,
     stop2_real DATETIME,
-    hours INT GENERATED ALWAYS AS (
-    (TIMESTAMPDIFF(HOUR, stop1_expected, stop1_real) + TIMESTAMPDIFF(HOUR, stop2_expected, stop2_real))*100
-    ) STORED
-
+    stop3_expected DATETIME,
+    stop3_real DATETIME,
+    lateness_fine REAL GENERATED ALWAYS AS (
+        GREATEST(0,
+            (CASE WHEN TIMESTAMPDIFF(MINUTE, stop1_expected, stop1_real) > 15 THEN (TIMESTAMPDIFF(MINUTE, stop1_expected, stop1_real) - 15) * 5 ELSE 0 END) +
+            (CASE WHEN TIMESTAMPDIFF(MINUTE, stop2_expected, stop2_real) > 15 THEN (TIMESTAMPDIFF(MINUTE, stop2_expected, stop2_real) - 15) * 5 ELSE 0 END) +
+            (CASE WHEN TIMESTAMPDIFF(MINUTE, stop3_expected, stop3_real) > 15 THEN (TIMESTAMPDIFF(MINUTE, stop3_expected, stop3_real) - 15) * 5 ELSE 0 END)
+        )
+    ) STORED,
+    status VARCHAR(50) 
 );
+
+
 
 CREATE TABLE Bus(
     bus_id INT PRIMARY KEY NOT NULL,
@@ -35,7 +43,6 @@ CREATE TABLE Bus_Type(
 
 CREATE TABLE Transactions(
     transaction_id VARCHAR(12) PRIMARY KEY NOT NULL,
-    emp_id INT,
     res_id INT,
     dated DATETIME,
     amount INT,
@@ -56,10 +63,4 @@ CREATE TABLE Job(
     job_title VARCHAR(255),
     salary INT);
 
-CREATE TABLE User (
-    user_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    username VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    job_id INT,
-    FOREIGN KEY (job_id) REFERENCES Job(job_id)
-);
+

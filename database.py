@@ -109,7 +109,7 @@ def export_to_csv(name, filename):
         fields = ['job_id', 'job_title', 'salary']
         rows = source("all_employees.sql")
     elif name == 'Reservation':
-        fields = ['res_id', 'cust_id', 'room_id', 'transaction_id', 'stop1_expected', 'stop1_real', 'stop2_expected', 'stop2_real', 'fine']
+        fields = ['res_id', 'cust_id', 'room_id', 'transaction_id', 'stop1_expected', 'stop1_real', 'stop2_expected', 'stop2_real','stop3_expected', 'stop3_real', 'lateness_fine']
         rows = source("all_reservations.sql")
     elif name == 'Room_Type':
         fields = ['type_id', 'name', 'capacity']
@@ -118,7 +118,7 @@ def export_to_csv(name, filename):
         fields = ['room_id', 'type_id', 'description', 'price', 'occupancy_status']
         rows = source("allbuses.sql")
     elif name == 'Transaction':
-        fields = ['transaction_id', 'emp_id', 'res_id', 'dated', 'amount', 'payment_mode', 'type', 'status']
+        fields = ['transaction_id',  'res_id', 'dated', 'amount', 'payment_mode', 'type', 'status']
         rows = source("all_transactions.sql")
     with open(filename, 'w') as csvfile:
         csvwriter = csv.writer(csvfile)

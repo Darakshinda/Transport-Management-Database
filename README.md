@@ -75,3 +75,13 @@ The proposed system utilizes a three-tier architecture:
 2. **Darakshinda** 2021CSB1130
 
 3. **Chaitanya** 2021CSB1121
+
+## How to Run
+1. Run app.y
+2. Register into the database from the GUI that pops up on running app.py
+3. Login to the database
+4. In Mysql ‘newdb’ database will be created
+5. Open ordered.sql and copy its queries. Run them in Mysql
+6. In the command line of the ide where you run app.py, there will be a link for
+localhost. Open that link and see the database having entries as required.
+
